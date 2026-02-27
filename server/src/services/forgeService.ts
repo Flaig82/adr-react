@@ -158,7 +158,7 @@ export function getForgeStatus(userId: number): ForgeStatus {
     .all();
 
   const pickaxes = allItems.filter(i => i.typeId === ITEM_TYPES.PICKAXE);
-  const rawMaterials = allItems.filter(i => [ITEM_TYPES.RAW_MATERIAL, ITEM_TYPES.RARE_MATERIAL].includes(i.typeId));
+  const rawMaterials = allItems.filter(i => ([ITEM_TYPES.RAW_MATERIAL, ITEM_TYPES.RARE_MATERIAL] as number[]).includes(i.typeId));
   const equipment = allItems.filter(i => EQUIPMENT_TYPE_IDS.includes(i.typeId) && i.duration < i.durationMax);
   const magicItems = allItems.filter(i => EQUIPMENT_TYPE_IDS.includes(i.typeId));
 
@@ -331,7 +331,7 @@ export function cutStone(userId: number, materialId: number): ForgeActionResult 
     )).get();
 
   if (!material) throw new Error('Material not found in your inventory');
-  if (![ITEM_TYPES.RAW_MATERIAL, ITEM_TYPES.RARE_MATERIAL].includes(material.typeId)) {
+  if (!([ITEM_TYPES.RAW_MATERIAL, ITEM_TYPES.RARE_MATERIAL] as number[]).includes(material.typeId)) {
     throw new Error('You can only cut raw or rare materials');
   }
   if (material.qualityId >= 5) {

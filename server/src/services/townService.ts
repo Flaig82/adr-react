@@ -53,12 +53,12 @@ function checkAndResetLimits(char: any): any {
 // ─── Get Town Status ────────────────────────────────────────────────────────
 
 export function getTownStatus(userId: number) {
-  let char = db.select().from(schema.characters)
+  const rawChar = db.select().from(schema.characters)
     .where(eq(schema.characters.userId, userId)).get();
-  if (!char) throw new Error('No character found');
+  if (!rawChar) throw new Error('No character found');
 
   // Check and reset daily limits
-  char = checkAndResetLimits(char);
+  const char = checkAndResetLimits(rawChar);
 
   // Get all skills (definitions)
   const allSkills = db.select().from(schema.skills).all();
