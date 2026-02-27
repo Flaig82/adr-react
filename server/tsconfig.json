@@ -9,5 +9,8 @@
       "@adr/shared": ["../packages/shared/dist"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../packages/shared" }
+  ]
 }
