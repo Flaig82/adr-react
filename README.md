@@ -2,6 +2,10 @@
 
 A React/TypeScript rebuild of **ADR (Adventure RPG v0.4.5)**, originally a PHP mod for phpBB2 forums.
 
+## Live Preview
+
+Try it out now at **[adr-react-server-jziprci4g-me-4526s-projects.vercel.app](https://adr-react-server-jziprci4g-me-4526s-projects.vercel.app/login)** — no setup required. This demo runs entirely in the browser and stores your character and login via localStorage.
+
 ## About
 
 ADR was a browser-based RPG game that ran as a phpBB2 modification, letting forum users create characters, battle monsters, collect items, and interact with each other. This project is a full ground-up rebuild using a modern stack while preserving the original game mechanics and feel.
