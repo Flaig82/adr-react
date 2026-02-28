@@ -4,7 +4,7 @@ A React/TypeScript rebuild of **ADR (Adventure RPG v0.4.5)**, originally a PHP m
 
 ## Live Preview
 
-Try it out now at **[adr-react-server-jziprci4g-me-4526s-projects.vercel.app](https://adr-react-server-jziprci4g-me-4526s-projects.vercel.app/login)** — no setup required. This demo runs entirely in the browser and stores your character and login via localStorage.
+Try it out now at **[adr-react-server-jziprci4g-me-4526s-projects.vercel.app](https://adr-react-server-jziprci4g-me-4526s-projects.vercel.app/)** — no setup required. This demo runs entirely in the browser and stores your character and login via localStorage.
 
 ## About
 
@@ -112,3 +112,4 @@ adr-react/
 ## Credits
 
 Originally based on **ADR (Adventure RPG v0.4.5)** for phpBB2 by the ADR development team.
+
