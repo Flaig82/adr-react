@@ -60,6 +60,30 @@ npm run dev --workspace=client
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
+## Vercel Demo Deploy (No Backend Required)
+
+This repo now supports a **client-only demo mode** that runs entirely in the browser using `localStorage`.
+
+- No API server required
+- No database required
+- Data persists per browser/device
+
+### Deploy
+
+1. Push this repo to GitHub.
+2. Import the repo into Vercel.
+3. Set **Root Directory** to `client`.
+4. Build command: `npm run build`
+5. Output directory: `dist`
+6. Deploy.
+
+### Demo Mode Toggle
+
+- Demo mode is **enabled by default**.
+- To force live API mode later, set env var: `VITE_DEMO_MODE=false`
+
+In live mode, the app will call `/api` endpoints and requires the backend/database stack.
+
 ## Project Structure
 
 ```

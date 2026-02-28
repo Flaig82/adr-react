@@ -1,4 +1,7 @@
+import { demoApi } from './demoApi';
+
 const BASE_URL = '/api';
+const DEMO_MODE = import.meta.env.VITE_DEMO_MODE !== 'false';
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
@@ -22,44 +25,58 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 export const api = {
   // Auth
   register: (username: string, password: string) =>
-    request<{ id: number; username: string }>('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-    }),
+    DEMO_MODE
+      ? demoApi.register(username, password)
+      : request<{ id: number; username: string }>('/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({ username, password }),
+        }),
 
   login: (username: string, password: string) =>
-    request<{ id: number; username: string; hasCharacter: boolean }>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-    }),
+    DEMO_MODE
+      ? demoApi.login(username, password)
+      : request<{ id: number; username: string; hasCharacter: boolean }>('/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ username, password }),
+        }),
 
   logout: () =>
-    request<{ message: string }>('/auth/logout', { method: 'POST' }),
+    DEMO_MODE
+      ? demoApi.logout()
+      : request<{ message: string }>('/auth/logout', { method: 'POST' }),
 
   me: () =>
-    request<{ id: number; username: string; hasCharacter: boolean }>('/auth/me'),
+    DEMO_MODE
+      ? demoApi.me()
+      : request<{ id: number; username: string; hasCharacter: boolean }>('/auth/me'),
 
   // Character
   getCharacter: () =>
-    request<any>('/character'),
+    DEMO_MODE
+      ? demoApi.getCharacter()
+      : request<any>('/character'),
 
   getCreationData: () =>
-    request<{
-      races: any[];
-      classes: any[];
-      elements: any[];
-      alignments: any[];
-    }>('/character/creation-data'),
+    DEMO_MODE
+      ? demoApi.getCreationData()
+      : request<{
+          races: any[];
+          classes: any[];
+          elements: any[];
+          alignments: any[];
+        }>('/character/creation-data'),
 
   rollStats: () =>
-    request<{
-      might: number;
-      dexterity: number;
-      constitution: number;
-      intelligence: number;
-      wisdom: number;
-      charisma: number;
-    }>('/character/roll', { method: 'POST' }),
+    DEMO_MODE
+      ? demoApi.rollStats()
+      : request<{
+          might: number;
+          dexterity: number;
+          constitution: number;
+          intelligence: number;
+          wisdom: number;
+          charisma: number;
+        }>('/character/roll', { method: 'POST' }),
 
   createCharacter: (data: {
     name: string;
@@ -76,211 +93,297 @@ export const api = {
       charisma: number;
     };
   }) =>
-    request<any>('/character', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    DEMO_MODE
+      ? demoApi.createCharacter(data)
+      : request<any>('/character', {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
 
   // Battle
   getBattle: () =>
-    request<{ battle: any | null }>('/battle'),
+    DEMO_MODE
+      ? demoApi.getBattle()
+      : request<{ battle: any | null }>('/battle'),
 
   startBattle: () =>
-    request<any>('/battle/start', { method: 'POST' }),
+    DEMO_MODE
+      ? demoApi.startBattle()
+      : request<any>('/battle/start', { method: 'POST' }),
 
   battleAction: (battleId: number, action: 'attack' | 'defend' | 'flee') =>
-    request<any>('/battle/action', {
-      method: 'POST',
-      body: JSON.stringify({ battleId, action }),
-    }),
+    DEMO_MODE
+      ? demoApi.battleAction(battleId, action)
+      : request<any>('/battle/action', {
+          method: 'POST',
+          body: JSON.stringify({ battleId, action }),
+        }),
 
   templeHeal: () =>
-    request<{ hp: number; hpMax: number; cost: number }>('/battle/heal', {
-      method: 'POST',
-    }),
+    DEMO_MODE
+      ? demoApi.templeHeal()
+      : request<{ hp: number; hpMax: number; cost: number }>('/battle/heal', {
+          method: 'POST',
+        }),
 
   templeResurrect: () =>
-    request<{ hp: number; cost: number }>('/battle/resurrect', {
-      method: 'POST',
-    }),
+    DEMO_MODE
+      ? demoApi.templeResurrect()
+      : request<{ hp: number; cost: number }>('/battle/resurrect', {
+          method: 'POST',
+        }),
 
   // Inventory
   getInventory: () =>
-    request<{ items: any[] }>('/inventory'),
+    DEMO_MODE
+      ? demoApi.getInventory()
+      : request<{ items: any[] }>('/inventory'),
 
   equipItem: (itemId: number) =>
-    request<{ success: boolean; message: string }>('/inventory/equip', {
-      method: 'POST',
-      body: JSON.stringify({ itemId }),
-    }),
+    DEMO_MODE
+      ? demoApi.equipItem(itemId)
+      : request<{ success: boolean; message: string }>('/inventory/equip', {
+          method: 'POST',
+          body: JSON.stringify({ itemId }),
+        }),
 
   unequipItem: (itemId: number) =>
-    request<{ success: boolean; message: string }>('/inventory/unequip', {
-      method: 'POST',
-      body: JSON.stringify({ itemId }),
-    }),
+    DEMO_MODE
+      ? demoApi.unequipItem(itemId)
+      : request<{ success: boolean; message: string }>('/inventory/unequip', {
+          method: 'POST',
+          body: JSON.stringify({ itemId }),
+        }),
 
   sellItem: (itemId: number) =>
-    request<{ gold: number; message: string }>('/inventory/sell', {
-      method: 'POST',
-      body: JSON.stringify({ itemId }),
-    }),
+    DEMO_MODE
+      ? demoApi.sellItem(itemId)
+      : request<{ gold: number; message: string }>('/inventory/sell', {
+          method: 'POST',
+          body: JSON.stringify({ itemId }),
+        }),
 
   dropItem: (itemId: number) =>
-    request<{ message: string }>('/inventory/drop', {
-      method: 'POST',
-      body: JSON.stringify({ itemId }),
-    }),
+    DEMO_MODE
+      ? demoApi.dropItem(itemId)
+      : request<{ message: string }>('/inventory/drop', {
+          method: 'POST',
+          body: JSON.stringify({ itemId }),
+        }),
 
   giveItem: (itemId: number, targetUserId: number) =>
-    request<{ message: string }>('/inventory/give', {
-      method: 'POST',
-      body: JSON.stringify({ itemId, targetUserId }),
-    }),
+    DEMO_MODE
+      ? demoApi.giveItem(itemId, targetUserId)
+      : request<{ message: string }>('/inventory/give', {
+          method: 'POST',
+          body: JSON.stringify({ itemId, targetUserId }),
+        }),
 
   // Shop
   getShops: () =>
-    request<{ shops: any[] }>('/shop'),
+    DEMO_MODE
+      ? demoApi.getShops()
+      : request<{ shops: any[] }>('/shop'),
 
   getShopItems: (shopId: number) =>
-    request<{ items: any[] }>(`/shop/${shopId}/items`),
+    DEMO_MODE
+      ? demoApi.getShopItems(shopId)
+      : request<{ items: any[] }>(`/shop/${shopId}/items`),
 
   buyItem: (itemId: number) =>
-    request<{ message: string; gold: number; itemName: string }>('/shop/buy', {
-      method: 'POST',
-      body: JSON.stringify({ itemId }),
-    }),
+    DEMO_MODE
+      ? demoApi.buyItem(itemId)
+      : request<{ message: string; gold: number; itemName: string }>('/shop/buy', {
+          method: 'POST',
+          body: JSON.stringify({ itemId }),
+        }),
 
   // Forge
   getForgeStatus: () =>
-    request<any>('/forge'),
+    DEMO_MODE
+      ? demoApi.getForgeStatus()
+      : request<any>('/forge'),
 
   mine: (pickaxeId: number) =>
-    request<any>('/forge/mine', {
-      method: 'POST',
-      body: JSON.stringify({ pickaxeId }),
-    }),
+    DEMO_MODE
+      ? demoApi.mine(pickaxeId)
+      : request<any>('/forge/mine', {
+          method: 'POST',
+          body: JSON.stringify({ pickaxeId }),
+        }),
 
   cutStone: (materialId: number) =>
-    request<any>('/forge/cut', {
-      method: 'POST',
-      body: JSON.stringify({ materialId }),
-    }),
+    DEMO_MODE
+      ? demoApi.cutStone(materialId)
+      : request<any>('/forge/cut', {
+          method: 'POST',
+          body: JSON.stringify({ materialId }),
+        }),
 
   repairItem: (itemId: number) =>
-    request<any>('/forge/repair', {
-      method: 'POST',
-      body: JSON.stringify({ itemId }),
-    }),
+    DEMO_MODE
+      ? demoApi.repairItem(itemId)
+      : request<any>('/forge/repair', {
+          method: 'POST',
+          body: JSON.stringify({ itemId }),
+        }),
 
   enchantItem: (itemId: number) =>
-    request<any>('/forge/enchant', {
-      method: 'POST',
-      body: JSON.stringify({ itemId }),
-    }),
+    DEMO_MODE
+      ? demoApi.enchantItem(itemId)
+      : request<any>('/forge/enchant', {
+          method: 'POST',
+          body: JSON.stringify({ itemId }),
+        }),
 
   // Vault
   getVaultStatus: () =>
-    request<any>('/vault'),
+    DEMO_MODE
+      ? demoApi.getVaultStatus()
+      : request<any>('/vault'),
 
   vaultDeposit: (amount: number) =>
-    request<any>('/vault/deposit', {
-      method: 'POST',
-      body: JSON.stringify({ amount }),
-    }),
+    DEMO_MODE
+      ? demoApi.vaultDeposit(amount)
+      : request<any>('/vault/deposit', {
+          method: 'POST',
+          body: JSON.stringify({ amount }),
+        }),
 
   vaultWithdraw: (amount: number) =>
-    request<any>('/vault/withdraw', {
-      method: 'POST',
-      body: JSON.stringify({ amount }),
-    }),
+    DEMO_MODE
+      ? demoApi.vaultWithdraw(amount)
+      : request<any>('/vault/withdraw', {
+          method: 'POST',
+          body: JSON.stringify({ amount }),
+        }),
 
   takeLoan: (amount: number) =>
-    request<any>('/vault/loan', {
-      method: 'POST',
-      body: JSON.stringify({ amount }),
-    }),
+    DEMO_MODE
+      ? demoApi.takeLoan(amount)
+      : request<any>('/vault/loan', {
+          method: 'POST',
+          body: JSON.stringify({ amount }),
+        }),
 
   repayLoan: () =>
-    request<any>('/vault/repay', { method: 'POST' }),
+    DEMO_MODE
+      ? demoApi.repayLoan()
+      : request<any>('/vault/repay', { method: 'POST' }),
 
   buyStock: (stockId: number, shares: number) =>
-    request<any>('/vault/stock/buy', {
-      method: 'POST',
-      body: JSON.stringify({ stockId, shares }),
-    }),
+    DEMO_MODE
+      ? demoApi.buyStock(stockId, shares)
+      : request<any>('/vault/stock/buy', {
+          method: 'POST',
+          body: JSON.stringify({ stockId, shares }),
+        }),
 
   sellStock: (stockId: number, shares: number) =>
-    request<any>('/vault/stock/sell', {
-      method: 'POST',
-      body: JSON.stringify({ stockId, shares }),
-    }),
+    DEMO_MODE
+      ? demoApi.sellStock(stockId, shares)
+      : request<any>('/vault/stock/sell', {
+          method: 'POST',
+          body: JSON.stringify({ stockId, shares }),
+        }),
 
   // Town
   getTownStatus: () =>
-    request<any>('/town'),
+    DEMO_MODE
+      ? demoApi.getTownStatus()
+      : request<any>('/town'),
 
   trainStat: (stat: string) =>
-    request<any>('/town/train', {
-      method: 'POST',
-      body: JSON.stringify({ stat }),
-    }),
+    DEMO_MODE
+      ? demoApi.trainStat(stat)
+      : request<any>('/town/train', {
+          method: 'POST',
+          body: JSON.stringify({ stat }),
+        }),
 
   learnSkill: (skillId: number) =>
-    request<any>('/town/learn-skill', {
-      method: 'POST',
-      body: JSON.stringify({ skillId }),
-    }),
+    DEMO_MODE
+      ? demoApi.learnSkill(skillId)
+      : request<any>('/town/learn-skill', {
+          method: 'POST',
+          body: JSON.stringify({ skillId }),
+        }),
 
   changeClass: (classId: number) =>
-    request<any>('/town/change-class', {
-      method: 'POST',
-      body: JSON.stringify({ classId }),
-    }),
+    DEMO_MODE
+      ? demoApi.changeClass(classId)
+      : request<any>('/town/change-class', {
+          method: 'POST',
+          body: JSON.stringify({ classId }),
+        }),
 
   townHeal: () =>
-    request<any>('/town/heal', { method: 'POST' }),
+    DEMO_MODE
+      ? demoApi.townHeal()
+      : request<any>('/town/heal', { method: 'POST' }),
 
   townResurrect: () =>
-    request<any>('/town/resurrect', { method: 'POST' }),
+    DEMO_MODE
+      ? demoApi.townResurrect()
+      : request<any>('/town/resurrect', { method: 'POST' }),
 
   // Chat
   getMessages: () =>
-    request<{ messages: any[] }>('/chat'),
+    DEMO_MODE
+      ? demoApi.getMessages()
+      : request<{ messages: any[] }>('/chat'),
 
   pollMessages: (afterId: number) =>
-    request<{ messages: any[] }>(`/chat/poll?after=${afterId}`),
+    DEMO_MODE
+      ? demoApi.pollMessages(afterId)
+      : request<{ messages: any[] }>(`/chat/poll?after=${afterId}`),
 
   sendMessage: (message: string) =>
-    request<any>('/chat', {
-      method: 'POST',
-      body: JSON.stringify({ message }),
-    }),
+    DEMO_MODE
+      ? demoApi.sendMessage(message)
+      : request<any>('/chat', {
+          method: 'POST',
+          body: JSON.stringify({ message }),
+        }),
 
   // Thief (steal from shops)
   getStealableItems: (shopId: number) =>
-    request<any>(`/shop/${shopId}/steal`),
+    DEMO_MODE
+      ? demoApi.getStealableItems(shopId)
+      : request<any>(`/shop/${shopId}/steal`),
 
   attemptSteal: (itemId: number) =>
-    request<any>('/shop/steal', {
-      method: 'POST',
-      body: JSON.stringify({ itemId }),
-    }),
+    DEMO_MODE
+      ? demoApi.attemptSteal(itemId)
+      : request<any>('/shop/steal', {
+          method: 'POST',
+          body: JSON.stringify({ itemId }),
+        }),
 
   // Character List
   getCharacterList: () =>
-    request<{ characters: any[] }>('/characters'),
+    DEMO_MODE
+      ? demoApi.getCharacterList()
+      : request<{ characters: any[] }>('/characters'),
 
   getCharacterProfile: (userId: number) =>
-    request<any>(`/characters/${userId}`),
+    DEMO_MODE
+      ? demoApi.getCharacterProfile(userId)
+      : request<any>(`/characters/${userId}`),
 
   // Jail
   getJailStatus: () =>
-    request<any>('/jail'),
+    DEMO_MODE
+      ? demoApi.getJailStatus()
+      : request<any>('/jail'),
 
   payBail: () =>
-    request<any>('/jail/bail', { method: 'POST' }),
+    DEMO_MODE
+      ? demoApi.payBail()
+      : request<any>('/jail/bail', { method: 'POST' }),
 
   getJailHistory: () =>
-    request<{ records: any[] }>('/jail/history'),
+    DEMO_MODE
+      ? demoApi.getJailHistory()
+      : request<{ records: any[] }>('/jail/history'),
 };
